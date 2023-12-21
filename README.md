@@ -57,7 +57,7 @@ Additionally, we have two splits: (a) Function Split (b) Binary Split.
 To create a new data, follow detailed instuctions at [Building VarCorpus](./varcorpus/README.md)
 
 Data sets available at:
-- [HSC](https://www.dropbox.com/scl/fi/1eekwcsg7wr7cux6y34xb/hsc_data.tar.gz?rlkey=s3kjroqt7a27hoeoc56mfyljw&dl=0)
+- [HSC](https://www.dropbox.com/scl/fo/4cu2fmuh10c4wp7xt53tu/h?rlkey=mlsnkyed35m4rl512ipuocwtt&dl=0)
 - [VarCorpus](https://www.dropbox.com/scl/fo/3thmg8xoq2ugtjwjcgjsm/h?rlkey=azgjeq513g4semc1qdi5xyroj&dl=0)
 
 
