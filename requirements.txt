@@ -1,0 +1,14 @@
+cpgqls_client
+regex
+pyelftools==0.29
+cle
+torch
+transformers
+jsonlines
+pandas
+gdown
+jupyterlab
+tensorboardX
+datasets
+scikit-learn
+accelerate>=0.20.1
