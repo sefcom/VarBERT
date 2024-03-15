@@ -10,14 +10,29 @@ import re
 import argparse
 from collections import defaultdict
 from multiprocessing import Process, Manager, cpu_count, Pool
-from itertools import repeat
-
+from itertools import repeat, islice
 
 def read_input_files(filename):
     
     samples, sample_ids = [], set()
     with jsonlines.open(filename,'r') as f:
         for each in tqdm(f):
+            if each.get('fid') is None:
+                new_fid = str(each['id']) + "-" + each['func_name'].replace("_", "-")
+                each['fid'] = new_fid
+            if each.get('type_stripped_norm_vars') is None:
+                vars_map = each.get('vars_map')
+                norm_var_type = {}
+                if vars_map:
+                    for pair in vars_map:
+                        norm_var = pair[1]
+                        var = pair[0]
+                        if norm_var in norm_var_type and each["type_stripped_vars"][var] != 'dwarf':
+                            norm_var_type[norm_var] = 'dwarf'
+                        else:
+                            norm_var_type[norm_var] = each["type_stripped_vars"][var]
+                each['type_stripped_norm_vars'] = norm_var_type
+                        
             sample_ids.add(each['fid'])
             samples.append(each)
     return sample_ids, samples
