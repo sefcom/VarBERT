@@ -23,6 +23,7 @@ Key Features
 ### Overview
 This repository contains details on generating a new dataset, and training and running inference on existing VarBERT models from the paper. To use VarBERT models in your day-to-day reverse engineering tasks, please refer to [Use VarBERT](#use-varbert). 
 
+
 ### VarBERT Model
 We take inspiration for VARBERT from the concepts of transfer learning generally and specifically Bidirectional Encoder Representations from Transformers (BERT).
 
@@ -33,7 +34,7 @@ We take inspiration for VARBERT from the concepts of transfer learning generally
 - The VarBERT API is a Python library to access and use the latest models. It can be used in three ways:
     1. From the CLI, directly on decompiled text (without an attached decompiler).
     2. As a scripting library.
-    3. As a decompiler plugin with [DALIA](https://github.com/mahaloz/DAILA) for enhanced decompiling experience.
+    3. As a decompiler plugin with [DAILA](https://github.com/mahaloz/DAILA) for enhanced decompiling experience.
 
 For a step-by-step guide and a demo on how to get started with the VarBERT API, please visit [VarBERT API](https://github.com/binsync/varbert_api/tree/main). 
 
@@ -63,6 +64,8 @@ Data sets available at:
 
 The fine-tuned models and their corresponding datasets are named `IDA-O0-Function` and `IDA-O0`, respectively. This naming convention indicates that the models and data set are based on functions decompiled from O0 binaries using the IDA decompiler.
 
+> [!NOTE]
+> Our existing data sets have been generated using IDA Pro 7.6 and Ghidra 10.4.
 
 ### Installation
 Prerequisites for training model or generating data set

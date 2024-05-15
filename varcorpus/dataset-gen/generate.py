@@ -15,7 +15,7 @@ def main(args):
         parser.error("IDA path is required when decompiling with IDA.")
     elif args.decompiler == 'ghidra' and not args.ghidra_path:
         parser.error("Ghidra path is required when decompiling with Ghidra.")
-  
+
     path_manager = PathManager(args)
     target_binaries = [
         os.path.abspath(path)
@@ -27,6 +27,7 @@ def main(args):
         pass
         #TODO:  detect
 
+    splits = True if args.splits else False
     l.info(f"Decompiling {len(target_binaries)} binaries with {decompiler}")
 
     runner = Runner(
@@ -39,7 +40,7 @@ def main(args):
         DEBUG=args.DEBUG
     )
 
-    runner.run(PARSE=True)
+    runner.run(PARSE=True, splits=splits)
 
     
 if __name__ == "__main__":
@@ -119,7 +120,12 @@ if __name__ == "__main__":
         action='store_true',
         required=False
     )
-
+    parser.add_argument(
+        "--splits",
+        help="Create test and train split",
+        action='store_true',
+        required=False
+    )
     args = parser.parse_args()
     from log import setup_logging
     setup_logging(args.tmpdir, args.DEBUG)

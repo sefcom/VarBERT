@@ -141,8 +141,8 @@ class Runner:
             l.info(f"Error! :: {binary_name} :: {self.decompiler} :: {e} ")
 
 
-    def run(self, PARSE):
-        
+    def run(self, PARSE, splits):
+
         if PARSE:
             try:               
                 joern_progress = tqdm(total=0, desc="Joern Processing")
@@ -178,7 +178,8 @@ class Runner:
                 
                 # dedup functions -> create train and test sets
                 joern_progress.close()
-                create_train_and_test_sets( f'{self.path_manager.tmpdir}', self.decompiler)
+                if splits:
+                    create_train_and_test_sets( f'{self.path_manager.tmpdir}', self.decompiler)
 
             except Exception as e:
                 l.error(f"Error during parallel decompilation: {e}")
