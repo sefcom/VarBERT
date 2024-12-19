@@ -39,7 +39,7 @@ Have your binaries directory and a output directory ready on your host machine. 
 ####  For Ghidra:
 
 ```
-docker build -t . varbert 
+docker build -t varbert -f ../../Dockerfile ..
 
 docker run -it \
     -v $PWD/<binaries_dir>:/varbert_workdir/data/binaries \
