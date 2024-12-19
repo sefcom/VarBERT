@@ -172,10 +172,10 @@ class Runner:
                             l.error(f"Error in starting Joern server for {binary_name} :: {e}")
                         finally:
                             if joern_server.is_server_running():
-                                joern_server.stop()                                
+                                joern_server.stop()
                                 l.debug(f"Stop Joern for :: {binary_name}")
-                            time.sleep(3)
-                
+                            time.sleep(10)
+
                 # dedup functions -> create train and test sets
                 joern_progress.close()
                 if splits:

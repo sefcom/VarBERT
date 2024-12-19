@@ -121,17 +121,17 @@ class JoernServer:
             joern_cmd = [os.path.join(self.joern_path, 'joern'), '--server', '--server-port', str(self.port)]
             self.process = subprocess.Popen(joern_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-            for _ in range(10):
+            for _ in range(20):
                 self.java_process =  self.is_server_running()
                 if self.java_process:
                     l.debug(f"Joern server started on port {self.port}")
                     return
-                time.sleep(2)
+                time.sleep(4)
                 l.debug(f"Retrying to start Joern server on port {self.port}")
         except Exception as e:
             l.error(f"Failed to start Joern server on port {self.port} :: {e}")
             return
-        
+
         finally:
             os.chdir(current_dir)
 
