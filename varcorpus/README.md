@@ -14,7 +14,8 @@ python3 generate.py \
     -lang <C_or_CPP> \
     -ida <path_to_idat64> or -ghidra <path_to_analyzeHeadless> \
     -w <number_of_parallel_workers> \
-    -joern <path_to_joern_directory>
+    -joern <path_to_joern_directory> \
+    --splits
 ```
 
 The current implementation relies on a specific modified version of [Joern](https://github.com/joernio/joern). We made this modification to expedite the data set creation process. Please download the compatible Joern version from [Joern](https://www.dropbox.com/scl/fi/toh6087y5t5xyln47i5ih/modified_joern.tar.gz?rlkey=lfvjn1u7zvtp9a4cu8z8vgsof&dl=0) and save it. 
@@ -28,6 +29,90 @@ For `-joern`, provide the path to directory with joern executable from the downl
 ```
 -joern <download_path>/joern/
 ```
+
+### Use Docker
+
+You can skip the setup and use our Dockerfile directly to build data set. 
+
+Have your binaries directory and a output directory ready on your host machine. These will be mounted into the container so you can easily provide binaries and retrieve train and test sets.
+
+####  For Ghidra:
+
+```
+docker build -t . varbert 
+
+docker run -it \
+    -v $PWD/<binaries_dir>:/varbert_workdir/data/binaries \
+    -v $PWD/<dir_to_save_sets>:/varbert_workdir/data/sets \
+    varbert  \
+    python3 /varbert_workdir/VarBERT/varcorpus/dataset-gen/generate.py \
+    -b /varbert_workdir/data/binaries \
+    -d /varbert_workdir/data/sets \
+    --decompiler ghidra  \
+    -lang <C_or_CPP> \
+    -ghidra /varbert_workdir/ghidra_10.4_PUBLIC/support/analyzeHeadless  \
+    -w <number_of_parallel_workers>  \
+    -joern /varbert_workdir/joern \
+    --splits
+```
+
+To enable debug mode add `--DEBUG` arg and mount a tmp directory from host to see intermediate files:
+
+```
+docker run -it \
+    -v $PWD/<binaries_dir>:/varbert_workdir/data/binaries \
+    -v $PWD/<dir_to_save_sets>:/varbert_workdir/data/sets \
+    -v $PWD/<dir_to_save_tmpdir>:/tmp/varbert_tmpdir \
+    varbert  \
+    python3 /varbert_workdir/VarBERT/varcorpus/dataset-gen/generate.py \
+    -b /varbert_workdir/data/binaries \
+    -d /varbert_workdir/data/sets \
+    --decompiler ghidra  \
+    -lang <C_or_CPP> \
+    -ghidra /varbert_workdir/ghidra_10.4_PUBLIC/support/analyzeHeadless  \
+    -w <number_of_parallel_workers>  \
+    --DEBUG  \
+    -joern /varbert_workdir/joern \
+    --splits
+```
+
+What this does:
+
+-  `-v $PWD/<binaries_dir>:/varbert_workdir/data/binaries`: Mounts your local binaries directory into the container.
+-  `-v $PWD/<dir_to_save_sets>:/varbert_workdir/data/sets`: Mounts the directory where you want to save the generated train/test sets.
+
+Inside the container, your binaries are accessible at `/varbert_workdir/data/binaries`, resulting data sets will be saved to `/varbert_workdir/data/sets` and intermediate files are available at `/tmp/varbert_tmpdir`.
+
+
+
+#### For IDA:
+
+Please update Dockerfile to include your IDA and run. 
+
+```
+docker run -it \
+    -v $PWD/<binaries_dir>:/varbert_workdir/data/binaries \
+    -v $PWD/<dir_to_save_sets>:/varbert_workdir/data/sets \
+    varbert  \
+    python3 /varbert_workdir/VarBERT/varcorpus/dataset-gen/generate.py \
+    -b /varbert_workdir/data/binaries \
+    -d /varbert_workdir/data/sets \
+    --decompiler ida  \
+    -lang <C_or_CPP> \
+    -ida <path_to_idat>  \
+    -w <number_of_parallel_workers>  \
+    -joern /varbert_workdir/joern \
+    --splits
+```
+
+
+**Notes:**
+
+- The train and test sets are split in an 80:20 ratio. If there aren't enough functions (or binaries) to meet this ratio, you may end up with no train or test sets after the run.
+- We built the dataset using **Ghidra 10.4**. If you wish to use a different version of Ghidra, please update the Ghidra download link in the Dockerfile accordingly.
+- In some cases there is a license popup which should be accepted before you can successfully run IDA in docker.
+- Disable type casts for more efficient variable matching. (we disabled it while building VarCorpus).
+
 
 Sample Function:
 ```json

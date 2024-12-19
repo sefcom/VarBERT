@@ -74,6 +74,13 @@ Prerequisites for training model or generating data set
     torch ≥ 1.9.0
     transformers ≥ 4.10.0
 
+#### Docker
+
+```
+docker build -t . varbert
+```
+
+#### Without Docker
 ```bash
 pip install -r requirements.txt
 
@@ -88,6 +95,7 @@ cd dwarfwrite
 pip install .
 ```
 Note: Ensure you install the correct Java version required by your specific Ghidra version.
+
 
 
 ### Citing
