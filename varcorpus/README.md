@@ -106,7 +106,7 @@ docker run -it \
 ```
 
 
-**Notes:**
+#### Notes:
 
 - The train and test sets are split in an 80:20 ratio. If there aren't enough functions (or binaries) to meet this ratio, you may end up with no train or test sets after the run.
 - We built the dataset using **Ghidra 10.4**. If you wish to use a different version of Ghidra, please update the Ghidra download link in the Dockerfile accordingly.
