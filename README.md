@@ -102,6 +102,16 @@ Note: Ensure you install the correct Java version required by your specific Ghid
 
 
 ### Citing
+
+Please cite our paper if you use this in your research:
+
 ```
-TODO
+@inproceedings{pal2024len,
+  title={" Len or index or count, anything but v1": Predicting Variable Names in Decompilation Output with Transfer Learning},
+  author={Pal, Kuntal Kumar and Bajaj, Ati Priya and Banerjee, Pratyay and Dutcher, Audrey and Nakamura, Mutsumi and Basque, Zion Leonahenahe and Gupta, Himanshu and Sawant, Saurabh Arjun and Anantheswaran, Ujjwala and Shoshitaishvili, Yan and others},
+  booktitle={2024 IEEE Symposium on Security and Privacy (SP)},
+  pages={4069--4087},
+  year={2024},
+  organization={IEEE}
+}
 ```
