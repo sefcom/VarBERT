@@ -67,6 +67,7 @@ The fine-tuned models and their corresponding datasets are named `IDA-O0-Functio
 > [!NOTE]
 > Our existing data sets have been generated using IDA Pro 7.6 and Ghidra 10.4.
 
+### Gentoo Binaries ###
 You can access the Gentoo binaries used to create VarCorpus here: https://www.dropbox.com/scl/fo/awtitjnc48k224373vcrx/h?rlkey=muj6t1watc6vn2ds6du7egoha&e=1&st=eicpyqln&dl=0
 
 ### Installation
