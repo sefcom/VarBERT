@@ -18,7 +18,7 @@ from create_dataset_splits import create_train_and_test_sets
 l = logging.getLogger('main')
 
 class Runner:
-    def __init__(self, decompiler, target_binaries, WORKERS, path_manager, PORT, language, DEBUG) -> None:
+    def __init__(self, decompiler, target_binaries, WORKERS, path_manager, PORT, language, DEBUG, language_map=None) -> None:
         self.decompiler = decompiler
         self.target_binaries =  target_binaries
         self.WORKERS = WORKERS
@@ -28,6 +28,7 @@ class Runner:
         self.language = language
         self.DEBUG = DEBUG
         self.collect_workdir = Manager().dict()
+        self.language_map = language_map or {}
 
     def _setup_environment_for_ghidra(self):
         java_home = "/usr/lib/jvm/java-17-openjdk-amd64"
@@ -133,8 +134,10 @@ class Runner:
 
             l.info(f'Start mapping for {binary_name} :: {self.decompiler}')
             
+            # Select language strictly from map if provided, else fall back to default
+            language_to_use = self.language_map.get(binary_name, self.language) if self.language_map else self.language
             matchvariable = DataLoader(binary_name, dwarf_info_path, self.decompiler, decompiled_code_strip_path, 
-                        decompiled_code_type_strip_path, joern_data_strip, joern_data_type_strip, data_map_dump, self.language, decompiled_code_type_strip_names)
+                        decompiled_code_type_strip_path, joern_data_strip, joern_data_type_strip, data_map_dump, language_to_use, decompiled_code_type_strip_names)
 
 
         except Exception as e:
