@@ -4,19 +4,48 @@ To build VarCorpus, we collected C and C++ packages from Gentoo and built them a
 
 The script reads binaries from a directory, generates type-stripped and stripped binaries, decompiles and parses them using Joern to match variables, and saves deduplicated training and testing sets for both function and binary split in a data directory. This pipeline supports two decompilers, IDA and Ghidra; it can be extended to any decompiler that generates C-style decompilation output.
 
-To generate the dataset, run the following command, replacing placeholders with correct paths and options:
+To generate the dataset, choose one of the following language selection modes.
 
-```python
+#### Single-language mode (Either C or CPP)
+
+```bash
 python3 generate.py \
     -b <path_to_binaries_directory> \
     -d <path_to_save_train_and_test_sets> \
     --decompiler <ida_or_ghidra> \
-    -lang <C_or_CPP> \
+    -lang <c_or_cpp> \
     -ida <path_to_idat64> or -ghidra <path_to_analyzeHeadless> \
     -w <number_of_parallel_workers> \
     -joern <path_to_joern_directory> \
     --splits
 ```
+
+#### Mixed-language mode (Both C and CPP)
+
+Provide a JSON mapping of binary basenames to languages and omit `-lang`:
+
+```json
+{
+  "bin_one": "c",
+  "bin_two": "cpp"
+}
+```
+
+```bash
+python3 generate.py \
+    -b <path_to_binaries_directory> \
+    -d <path_to_save_train_and_test_sets> \
+    --decompiler <ida_or_ghidra> \
+    -ida <path_to_idat64> or -ghidra <path_to_analyzeHeadless> \
+    --language_map <absolute_path_to_language_map.json> \
+    -w <number_of_parallel_workers> \
+    -joern <path_to_joern_directory> \
+    --splits
+```
+
+Notes:
+- Exactly one of `-lang/--corpus_language` or `--language_map` must be provided (mutually exclusive).
+- Allowed languages are `c` or `cpp` (lowercase).
 
 The current implementation relies on a specific modified version of [Joern](https://github.com/joernio/joern). We made this modification to expedite the data set creation process. Please download the compatible Joern version from [Joern](https://www.dropbox.com/scl/fi/toh6087y5t5xyln47i5ih/modified_joern.tar.gz?rlkey=lfvjn1u7zvtp9a4cu8z8vgsof&dl=0) and save it. 
 
@@ -49,7 +78,7 @@ docker run -it \
     -b /varbert_workdir/data/binaries \
     -d /varbert_workdir/data/sets \
     --decompiler ghidra  \
-    -lang <C_or_CPP> \
+    -lang <c_or_cpp> \
     -ghidra /varbert_workdir/ghidra_10.4_PUBLIC/support/analyzeHeadless  \
     -w <number_of_parallel_workers>  \
     -joern /varbert_workdir/joern \
@@ -68,7 +97,7 @@ docker run -it \
     -b /varbert_workdir/data/binaries \
     -d /varbert_workdir/data/sets \
     --decompiler ghidra  \
-    -lang <C_or_CPP> \
+    -lang <c_or_cpp> \
     -ghidra /varbert_workdir/ghidra_10.4_PUBLIC/support/analyzeHeadless  \
     -w <number_of_parallel_workers>  \
     --DEBUG  \
@@ -98,7 +127,7 @@ docker run -it \
     -b /varbert_workdir/data/binaries \
     -d /varbert_workdir/data/sets \
     --decompiler ida  \
-    -lang <C_or_CPP> \
+    -lang <c_or_cpp> \
     -ida <path_to_idat>  \
     -w <number_of_parallel_workers>  \
     -joern /varbert_workdir/joern \
@@ -112,6 +141,17 @@ docker run -it \
 - We built the dataset using **Ghidra 10.4**. If you wish to use a different version of Ghidra, please update the Ghidra download link in the Dockerfile accordingly.
 - In some cases there is a license popup which should be accepted before you can successfully run IDA in docker.
 - Disable type casts for more efficient variable matching. (we disabled it while building VarCorpus).
+
+### Debug and temporary directories
+
+- `--DEBUG`: preserves the temporary working directory so you can inspect intermediates and logs.
+- `--tmpdir <path>`: sets a custom working directory (default: `/tmp/varbert_tmpdir`). Important subdirectories during a run:
+  - `binary/strip`, `binary/type_strip`: modified binaries
+  - `dc/<decompiler>/<strip|type_strip>`: decompiled code
+  - `dwarf`: DWARF info per binary
+  - `joern/<decompiler>/<strip|type_strip>`: Joern JSON
+  - `map/<decompiler>/<binary_name>`: variables mapped decompiled functions
+  - `splits`: train and test sets
 
 
 Sample Function:
