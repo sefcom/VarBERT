@@ -114,7 +114,7 @@ def find_c_and_cpp_files(dedup_dir, decomp):
         with open(os.path.join(dedup_dir, decomp, f), 'r') as r:
             lines = r.readlines()
             if lines:
-                if json.loads(lines[0])['language'] == 'C':
+                if json.loads(lines[0])['language'] == 'c':
                     c_funcs_per_binary.append(len(lines))
                     c_name_and_lines[f] = len(lines)
                 else:
