@@ -83,7 +83,7 @@ def hash_funcs(workdir, decomp, file_):
         data['md5'] = md5
         md5_to_funcline[md5] = name
         funcline_to_data[name] = data
-        if data['language'] == 'C':
+        if data['language'] == 'c':
             cfuncs_md5[md5] = name
         else:
             cppfuncs_md5[md5] = name
